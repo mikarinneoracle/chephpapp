@@ -1,0 +1,9 @@
+{
+  "runtime": {
+    "majorVersion": "5.6"
+  },
+  "startupTime": 30,
+  "shutdownTime": 0,
+  "release": {},
+  "notes": "PHP Sample Application"
+}
