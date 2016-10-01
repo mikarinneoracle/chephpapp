@@ -8,7 +8,7 @@
     * server="http://localhost:8089/" connects to your local machine.
     * Modify it to connect to your oracle cloud server
     */
-    var server="employees-rest-api.php/"
+    var server="http://141.144.32.34:32772/phporaapp/employees-rest-api.php/"
   </script>
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
     crossorigin="anonymous"></script>
@@ -284,6 +284,7 @@
       });
 
       function loadEmployees(){
+        console.log(server +"employees");
         $("#people").show();
         $("#people").html("LOADING...");
         $.ajax({

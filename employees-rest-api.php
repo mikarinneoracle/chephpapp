@@ -10,14 +10,12 @@ set_exception_handler(function ($e) {
 });
 
 // assume JSON, handle requests by verb and path
-/*
 $verb = $_SERVER['REQUEST_METHOD'];
 $url_pieces = explode('/', $_SERVER['PATH_INFO']);
 
 if ($url_pieces[1] != 'employees') {
     throw new Exception('Unknown endpoint', 404);
 }
-*/
 
 $employeeStorage = new EmployeeStorage ();
 

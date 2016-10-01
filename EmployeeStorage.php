@@ -7,20 +7,17 @@ class EmployeeStorage {
     private $conn;
 
     public function __construct() {
-        $userName = getenv('DBAAS_USER_NAME') ? getenv('DBAAS_USER_NAME') : 'oracle';
-        $password = getenv('DBAAS_USER_PASSWORD') ? getenv('DBAAS_USER_PASSWORD') : 'oracle12';
-        $default_descriptor = getenv('DBAAS_DEFAULT_CONNECT_DESCRIPTOR') ? getenv('DBAAS_DEFAULT_CONNECT_DESCRIPTOR') : 'localhost/XE';
-        $this->conn = oci_connect($userName, $password, $default_descriptor);
+        $this->conn = oci_connect("mika", "pass", "140.86.0.141:1521/PDB1.gse00000504.oraclecloud.internal");
         if (!$this->conn) {
             $e = oci_error();
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+            //trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
             echo "connection error. Failed.....";
         }
     }
 
     public function getAll() {
         $data = Array();
-        $query = 'SELECT * FROM EMPLOYEE';
+        $query = 'SELECT * FROM SYS.EMPLOYEE';
 
         $stid = oci_parse($this->conn, $query);
         oci_execute($stid);
@@ -49,7 +46,7 @@ class EmployeeStorage {
 		}else if ($criteria=='title'){
 			$filter = 'TITLE';
 		}		
-		$query = 'SELECT * FROM EMPLOYEE WHERE ' . $filter . '=:value';
+		$query = 'SELECT * FROM SYS.EMPLOYEE WHERE ' . $filter . '=:value';
         $stmt = oci_parse($this->conn, $query);
         oci_bind_by_name($stmt, ':value', $value, -1);
         oci_execute($stmt);
@@ -69,14 +66,14 @@ class EmployeeStorage {
     }
 
     public function delete($id) {
-        $query = 'DELETE FROM EMPLOYEE WHERE ID = :id';
+        $query = 'DELETE FROM SYS.EMPLOYEE WHERE ID = :id';
         $stmt = oci_parse($this->conn, $query);
         oci_bind_by_name($stmt, ':id', $id, -1);
         oci_execute($stmt);
     }
 
     public function update($employee) {
-        $query = 'UPDATE EMPLOYEE SET FIRSTNAME=:firstName, LASTNAME=:lastName, PHONE=:phone, BIRTHDATE=:birthdate, TITLE=:title, DEPARTMENT=:department, EMAIL=:email '
+        $query = 'UPDATE SYS.EMPLOYEE SET FIRSTNAME=:firstName, LASTNAME=:lastName, PHONE=:phone, BIRTHDATE=:birthdate, TITLE=:title, DEPARTMENT=:department, EMAIL=:email '
                 . 'WHERE ID=:id';
         $stmt = oci_parse($this->conn, $query);
         oci_bind_by_name($stmt, ':firstName', $employee->firstName);
@@ -91,8 +88,8 @@ class EmployeeStorage {
     }
 
     public function save($employee) {
-        $query = 'INSERT INTO EMPLOYEE (ID, FIRSTNAME, LASTNAME, EMAIL, PHONE, BIRTHDATE, TITLE, DEPARTMENT) '
-                . 'VALUES(employee_seq.nextval,:firstName,:lastName,:email,:phone,:birthdate,:title,:department)';
+        $query = 'INSERT INTO SYS.EMPLOYEE (ID, FIRSTNAME, LASTNAME, EMAIL, PHONE, BIRTHDATE, TITLE, DEPARTMENT) '
+                . 'VALUES(SYS.employee_seq.nextval,:firstName,:lastName,:email,:phone,:birthdate,:title,:department)';
         $stmt = oci_parse($this->conn, $query);
         oci_bind_by_name($stmt, ':firstName', $employee->firstName);
         oci_bind_by_name($stmt, ':lastName', $employee->lastName);
@@ -105,7 +102,7 @@ class EmployeeStorage {
     }
 
     public function get($id) {
-        $query = 'SELECT * FROM EMPLOYEE WHERE ID=?';
+        $query = 'SELECT * FROM SYS.EMPLOYEE WHERE ID=?';
         $statement = $this->dbc->prepare($query);
         $statement->bindParam(1, $id);
         $statement->execute();
